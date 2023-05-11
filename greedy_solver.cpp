@@ -1,4 +1,5 @@
 #include "greedy_solver.h"
+using namespace std;
 
 
 GreedySolver::GreedySolver() {}
@@ -15,9 +16,21 @@ void GreedySolver::setInstance(TaxiAssignmentInstance &instance) {
 }
 
 void GreedySolver::solve() {
-
+    for(int pasajero=0; pasajero<_instance.n; pasajero++){
+        min_temp = _instance.dist[pasajero][0];
+        for(int d=0; d<_instance.n; d++){
+            if(_instance.dist[pasajero][d] < min_temp){
+                min_temp = _instance.dist[pasajero][d];
+            }
+            
+        }
+    }
 
 }
+
+// min(c, k){
+//     return min(c[0],min(c.pop, k-1) )
+// }
 
 double GreedySolver::getObjectiveValue() const {
     return this->_objective_value;
