@@ -1,4 +1,5 @@
 #include "greedy_solver.h"
+#include "taxi_assignment_solution.h"
 using namespace std;
 
 
@@ -17,24 +18,33 @@ void GreedySolver::setInstance(TaxiAssignmentInstance &instance) {
 
 void GreedySolver::solve() {
 
-    for(int taxi = 0 ; taxi < _instance.n ; taxi++){
-        double min_temp = _instance.dist[0][0];
-        int pax_min = 0;
-        for(int pasajero=1 ; pasajero < _instance.n; pasajero++){
-            if(_instance.dist[taxi][pasajero] < min_temp && !TaxiAssignmentSolution::isPaxAssigned(pasajero)){
-                min_temp = _instance.dist[taxi][pasajero];
-                pax_min = pasajero;
+    //auto solucion = TaxiAssignmentSolution(n);
+    for (int p = 0; p < this->_instance.n; p++){
+        
+        int min_taxi = -1;
+
+        //buscamos el primer taxi sin asignar dentro de los restantes para cada pasajero...
+        while(min_taxi == -1){
+            for(int t = 0; t < this->_instance.n; t++){
+                if(this->_solution.isTaxiAssigned(t) == false){
+                    min_taxi = t;
+                }
             }
         }
-        TaxiAssignmentSolution::assign(taxi, pax_min);
 
+
+
+        // double min = this->_instance.dist[0][p];
+        
+        // for (int t = 0; t < this->_instance.n ; t++){
+        //     if ((this->_instance.dist[t][p] < min) && (!this->_solution.isTaxiAssigned(t))){
+        //         min = this->_instance.dist[t][p];
+        //         min_taxi = t;
+        //     }
+        // }
+        // this->_solution.assign(min_taxi,p);
     }
-
 }
-
-// min(c, k){
-//     return min(c[0],min(c.pop, k-1) )
-// }
 
 double GreedySolver::getObjectiveValue() const {
     return this->_objective_value;
@@ -51,5 +61,4 @@ int GreedySolver::getSolutionStatus() const {
 double GreedySolver::getSolutionTime() const {
     return this->_solution_time;
 }
-
 
