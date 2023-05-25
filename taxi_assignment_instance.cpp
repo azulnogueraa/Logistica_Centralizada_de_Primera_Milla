@@ -23,10 +23,15 @@ void TaxiAssignmentInstance::ReadFromFile(std::string filename) {
 
     // Read the number of taxis / passengers.
     input_file >> this->n;
+    // vector de localización del taxi
     this->taxi_position = std::vector<std::pair<double, double> >(this->n);
+    // vector localización de pasajeros
     this->pax_position = std::vector<std::pair<double, double> >(this->n);
+    // vector distancia del viaje
     this->pax_trip_dist = std::vector<double>(this->n);
+    // vector tarifa del viaje
     this->pax_tot_fare = std::vector<double>(this->n);
+    // matriz de distancia entre conductor y pasajero
     this->dist = std::vector< std::vector<double> >(this->n, std::vector<double>(this->n));
 
 

@@ -16,14 +16,18 @@ void GreedySolver::setInstance(TaxiAssignmentInstance &instance) {
 }
 
 void GreedySolver::solve() {
-    for(int pasajero=0; pasajero<_instance.n; pasajero++){
-        min_temp = _instance.dist[pasajero][0];
-        for(int d=0; d<_instance.n; d++){
-            if(_instance.dist[pasajero][d] < min_temp){
-                min_temp = _instance.dist[pasajero][d];
+
+    for(int taxi = 0 ; taxi < _instance.n ; taxi++){
+        double min_temp = _instance.dist[0][0];
+        int pax_min = 0;
+        for(int pasajero=1 ; pasajero < _instance.n; pasajero++){
+            if(_instance.dist[taxi][pasajero] < min_temp && !TaxiAssignmentSolution::isPaxAssigned(pasajero)){
+                min_temp = _instance.dist[taxi][pasajero];
+                pax_min = pasajero;
             }
-            
         }
+        TaxiAssignmentSolution::assign(taxi, pax_min);
+
     }
 
 }
