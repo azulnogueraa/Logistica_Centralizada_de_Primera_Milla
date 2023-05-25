@@ -1,6 +1,5 @@
 #include "min_cost_flow_solver.h"
 
-
 MinCostFlowSolver::MinCostFlowSolver() {}
 
 MinCostFlowSolver::MinCostFlowSolver(TaxiAssignmentInstance &instance) {
