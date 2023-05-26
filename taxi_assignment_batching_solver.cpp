@@ -62,7 +62,57 @@ void BatchingSolver::solve() {
 
     //Bibliografia de chrono: https://openwebinars.net/blog/como-usar-la-libreria-chrono-en-c/
 
+}
 
+void MinCostFlowSolver::_createMinCostFlowNetwork() {
+
+    // Initialize graph structures.
+    int n = this->_instance.n;
+    std::vector<int64_t> start_nodes(n*n, -1);
+    std::vector<int64_t> end_nodes(n*n, -1);
+    std::vector<int64_t> capacities(n*n, 1);
+    std::vector<int64_t> unit_costs(n*n, -1);
+
+    // Complete the graph structures. 
+    // Origin vertices (taxis) indexed from 0...n-1. 
+    // Destination vertices (paxs) indexed from n...2n-1
+    // unit_cost of (i,j) = dist[i][j]
+    int cnt = 0;
+    for (int i = 0; i < this->_instance.n; i++) {
+        for (int j = this->_instance.n; j < 2*this->_instance.n; j++) {
+            // capacities are always 1, defined when initialized.
+            start_nodes[cnt] = i;
+            end_nodes[cnt] = j;
+            unit_costs[cnt] = 10*this->_instance.dist[i][j - n];
+            cnt++;
+        }
+    }
+
+    // Create the supplies.
+    // supplies[i] = 1 for taxis, i = 0,...,n-1.
+    // supplies[i] = -1 for paxs, i = n,...,2n-1.
+    std::vector<int64_t> supplies(2*n, 0);
+    for (int i = 0; i < this->_instance.n; i++) {
+        supplies[i] = 1;
+        supplies[n + i] = -1;
+    }
+
+    // Create the digraph
+    // Add each arc.
+    for (int i = 0; i < start_nodes.size(); ++i) {
+        int arc = this->_min_cost_flow.AddArcWithCapacityAndUnitCost(start_nodes[i], end_nodes[i], capacities[i], unit_costs[i]);
+        if (arc != i) LOG(FATAL) << "Internal error";
+    }
+
+    // Add node supplies.
+    for (int i = 0; i < supplies.size(); ++i) {
+        this->_min_cost_flow.SetNodeSupply(i, supplies[i]);
+    }
+
+    for (int i = 0; i < n*n; i++) {
+        std::cout << unit_costs[i] << " ";
+    }
+    std::cout << std::endl;
 }
 
 double BatchingSolver::getObjectiveValue() const {
