@@ -12,9 +12,23 @@ int main(int argc, char** argv) {
 
     TaxiAssignmentSolution solution(instance.n);
 
+
+    //Greedy:
+
     GreedySolver solver(instance);
 
     solver.solve();
+
+    std::cout << "val_obj_g: " << solver.getObjectiveValue() << std::endl;
+
+    //Batching:
+
+    BatchingSolver solver(instance);
+
+    BatchingSolver.solve();
+
+    std::cout << "val_obj_b: " << solver.getObjectiveValue() << std::endl;
+
 
     return 0;
 }
