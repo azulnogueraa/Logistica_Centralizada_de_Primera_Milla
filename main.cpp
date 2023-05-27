@@ -2,6 +2,8 @@
 #include "taxi_assignment_solution.h"
 #include "checker.h"
 #include "greedy_solver.h"
+#include "min_cost_flow_solver.h"
+#include "taxi_assignment_batching_solver.h"
 
 
 int main(int argc, char** argv) {
@@ -12,23 +14,9 @@ int main(int argc, char** argv) {
 
     TaxiAssignmentSolution solution(instance.n);
 
-
-    //Greedy:
-
     GreedySolver solver(instance);
 
     solver.solve();
-
-    std::cout << "val_obj_g: " << solver.getObjectiveValue() << std::endl;
-
-    //Batching:
-
-    BatchingSolver solver(instance);
-
-    BatchingSolver.solve();
-
-    std::cout << "val_obj_b: " << solver.getObjectiveValue() << std::endl;
-
 
     return 0;
 }

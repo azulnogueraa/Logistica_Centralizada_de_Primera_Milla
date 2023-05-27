@@ -28,16 +28,13 @@ void GreedySolver::solve() {
         int min_taxi = -1;
 
         //buscamos cualquier taxi sin asignar dentro de los restantes para cada pasajero y se lo asignamos temporalmente a min_taxi...
-        while(min_taxi == -1){
+        for(int t = 0; t < this->_instance.n; t++){
 
-            for(int t = 0; t < this->_instance.n; t++){
-
-                //verificamos que el taxi no haya sido asignado a ningun otro pasajero...
-                if(this->_solution.isTaxiAssigned(t) == false){
-                    min_taxi = t;
-                }
+            //verificamos que el taxi no haya sido asignado a ningun otro pasajero...
+            if(min_taxi == -1 && this->_solution.isTaxiAssigned(t) == false){
+                min_taxi = t;
+                break;
             }
-
         }
 
         double min_dist = this->_instance.dist[min_taxi][p];
