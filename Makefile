@@ -5,7 +5,6 @@ LIBDIRS = /Users/achula/achula/td5/tp1/or-tools_arm64_macOS-13.2.1_cpp_v9.6.2534
 SRC = taxi_assignment_instance.cpp taxi_assignment_solution.cpp checker.cpp greedy_solver.cpp taxi_assignment_batching_solver.cpp main.cpp
 OBJ = $(SRC:.cpp=.o)
 EXEC = taxi_batching
-
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
