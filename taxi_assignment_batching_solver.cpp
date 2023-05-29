@@ -1,5 +1,6 @@
 #include "taxi_assignment_batching_solver.h"
 
+
 using namespace std;
 
 BatchingSolver::BatchingSolver() {}
