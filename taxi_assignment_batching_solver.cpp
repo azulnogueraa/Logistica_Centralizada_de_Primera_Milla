@@ -1,5 +1,6 @@
 #include "taxi_assignment_batching_solver.h"
 
+using namespace std;
 
 BatchingSolver::BatchingSolver() {}
 
@@ -26,7 +27,7 @@ void BatchingSolver::solve() {
     this->_solution_status = this->_min_cost_flow.Solve();
 
      // Obtain the solution, construct the corresponding object and record de desired parameters.
-    if (status == operations_research::MinCostFlow::OPTIMAL) {
+    if (_solution_status == operations_research::MinCostFlow::OPTIMAL) {
         
         for (size_t i = 0; i < this->_min_cost_flow.NumArcs(); ++i) {
             int64_t flow = this->_min_cost_flow.Flow(i);
@@ -45,7 +46,7 @@ void BatchingSolver::solve() {
             this->_solution.assign(t,p);
 
             //El valor objetivo equivale a la suma de los costos de las aristas t->p.
-            this->_objective_value += this->_min_cost_flow.UniCost(i);
+            this->_objective_value += this->_min_cost_flow.UnitCost(i);
 
         }
     } else {

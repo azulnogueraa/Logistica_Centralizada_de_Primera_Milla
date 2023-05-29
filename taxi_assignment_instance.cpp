@@ -1,5 +1,6 @@
 #include "taxi_assignment_instance.h"
 
+
 void split(std::string &str, char &delim, std::vector<std::string> &out) {
             // create a stream from the string  
             std::stringstream s(str);  
