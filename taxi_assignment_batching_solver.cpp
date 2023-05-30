@@ -20,11 +20,14 @@ void BatchingSolver::solve() {
 
     //Inicializamos el cronómetro que contará el tiempo de resolución usando batching...
     auto start = chrono::steady_clock::now();
+
+    //Guardamos la solución en _solution...
+    this->_solution = TaxiAssignmentSolution(this->_instance.n);
     
-    // Create the min cost network flow instance.
+    //Se crea la red de flujo minimo de _instance...
     this->_createMinCostFlowNetwork();
 
-    // Guardar el problema resuelto en _solution_status
+    // Guardar el status en _solution_status
     this->_solution_status = this->_min_cost_flow.Solve();
 
      // Obtain the solution, construct the corresponding object and record de desired parameters.
@@ -37,19 +40,28 @@ void BatchingSolver::solve() {
 
             int64_t cost = flow * this->_min_cost_flow.UnitCost(i);
 
-            //Obtenemos para el taxi i el pasajero i.
+            //Obtenemos el taxi de la arista i...
             int t = this->_min_cost_flow.Tail(i);
-            
-            //Como para todo nodo i no existe un nodo j igual a i, los pasajeros estan inicializados con valores de n+1 a 2n. Para mantener la estructura de nuestro modelo, le restamos n a los nodos p. 
+
+            /*
+            Como el solucionador del flujo de costo mínimo requiere que todos los nodos del grafo esten numerados de forma distintiva, 
+             los nodos de los pasajeros estan inicializados con valores de n a 2n-1. Para mantener la estructura de nuestro modelo, 
+             le restamos n a los nodos p.
+            */
+
+            //Obtenemos el pasajero de la  arista i...
             int p = this->_min_cost_flow.Head(i) - this->_instance.n;
+            
 
             //Agregamos la arista t->p a la solución.
             this->_solution.assign(t,p);
 
             //El valor objetivo equivale a la suma de los costos de las aristas t->p.
-            this->_objective_value += this->_min_cost_flow.UnitCost(i);
+            //dividimos por diez para que queden los números originales.
+            this->_objective_value += this->_min_cost_flow.UnitCost(i) / 10.0;
 
         }
+
     } else {
         std::cout << "Solving the min cost flow problem failed. Solver status: "
                 << this->_solution_status << std::endl;
@@ -66,55 +78,54 @@ void BatchingSolver::solve() {
 
 }
 
-void MinCostFlowSolver::_createMinCostFlowNetwork() {
+// a continuación se crea el grafo modelado en el ejercicio 2
+void BatchingSolver::_createMinCostFlowNetwork() {
 
-    // Initialize graph structures.
+    // Inicializamos las estructuras del grafo...
     int n = this->_instance.n;
     std::vector<int64_t> start_nodes(n*n, -1);
     std::vector<int64_t> end_nodes(n*n, -1);
     std::vector<int64_t> capacities(n*n, 1);
     std::vector<int64_t> unit_costs(n*n, -1);
 
-    // Complete the graph structures. 
-    // Origin vertices (taxis) indexed from 0...n-1. 
-    // Destination vertices (paxs) indexed from n...2n-1
-    // unit_cost of (i,j) = dist[i][j]
+    /*
+    Completamos las estructuras del grafo. 
+    - Los vertices que representan los taxis se indexan de 0 a n-1.
+    - Los vertices que representan a los pasajeros se indexan de n a 2n-1.
+    - Los costos de las aristas t->p son 10 * dist[t][p]
+    */
+
     int cnt = 0;
     for (int i = 0; i < this->_instance.n; i++) {
         for (int j = this->_instance.n; j < 2*this->_instance.n; j++) {
-            // capacities are always 1, defined when initialized.
+            // Las capacidades son todas 1, definidas al inicializar.
             start_nodes[cnt] = i;
             end_nodes[cnt] = j;
-            unit_costs[cnt] = 10*this->_instance.dist[i][j - n];
+            unit_costs[cnt] = 10 * this->_instance.dist[i][j - n];
             cnt++;
         }
     }
 
-    // Create the supplies.
-    // supplies[i] = 1 for taxis, i = 0,...,n-1.
-    // supplies[i] = -1 for paxs, i = n,...,2n-1.
+    // Creamos las supplies...
+    // supplies[i] = 1 para taxis, i = 0,...,n-1.
+    // supplies[i] = -1 para paxs, i = n,...,2n-1.
     std::vector<int64_t> supplies(2*n, 0);
     for (int i = 0; i < this->_instance.n; i++) {
         supplies[i] = 1;
         supplies[n + i] = -1;
     }
 
-    // Create the digraph
-    // Add each arc.
+    // Crea el digrafo añadiendo cada arista...
     for (int i = 0; i < start_nodes.size(); ++i) {
         int arc = this->_min_cost_flow.AddArcWithCapacityAndUnitCost(start_nodes[i], end_nodes[i], capacities[i], unit_costs[i]);
         if (arc != i) LOG(FATAL) << "Internal error";
     }
 
-    // Add node supplies.
+    // Agregamos los supplies de cada nodo.
     for (int i = 0; i < supplies.size(); ++i) {
         this->_min_cost_flow.SetNodeSupply(i, supplies[i]);
     }
 
-    for (int i = 0; i < n*n; i++) {
-        std::cout << unit_costs[i] << " ";
-    }
-    std::cout << std::endl;
 }
 
 double BatchingSolver::getObjectiveValue() const {

@@ -22,6 +22,8 @@ void GreedySolver::solve() {
     //inicializamos el cronometro que contara el tiempo de resolución Greedy...
     auto start = chrono::steady_clock::now();
 
+    //inicializamos la solución a partir del n de la instancia del TaxiAssignmentSolution...
+    this->_solution = TaxiAssignmentSolution(this->_instance.n);
 
     for (int p = 0; p < this->_instance.n; p++){
 
@@ -32,7 +34,7 @@ void GreedySolver::solve() {
         for(int t = 0; t < this->_instance.n; t++){
 
             //verificamos que el taxi no haya sido asignado a ningun otro pasajero...
-            if(min_taxi == -1 && this->_solution.isTaxiAssigned(t) == false){
+            if( min_taxi == -1 && this->_solution.isTaxiAssigned(t) == false ){
                 min_taxi = t;
                 break;
             }
@@ -65,7 +67,7 @@ void GreedySolver::solve() {
     chrono::duration<double, std::milli> duration = end - start;
     this->_solution_time = duration.count();
 
-    //bibliografia de chrono: https://openwebinars.net/blog/como-usar-la-libreria-chrono-en-c/
+    //libreria de chrono: https://openwebinars.net/blog/como-usar-la-libreria-chrono-en-c/
 
 }
 
