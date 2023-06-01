@@ -6,7 +6,6 @@
 #include "taxi_assignment_solution.h"
 #include "checker.h"
 #include "greedy_solver.h"
-#include "min_cost_flow_solver.h"
 #include "taxi_assignment_batching_solver.h"
 #include "ortools/graph/min_cost_flow.h"
 
@@ -61,7 +60,58 @@ int main(int argc, char** argv) {
 
         archivo << filename << "," << instance.n << "," << g_objective_value << "," << b_objective_value << "," << g_solution_time << "," << b_solution_time << "," << gap_ov << "," << gap_t << std::endl;
 
+
+
+    //Ejercicio 7:
+    std::ofstream archivo("resultados_nuevos.csv");
+
+    // Escribamos los nombres de columna en el archivo
+    archivo << "Nombre" << "," << "Función Objetivo Greedy" << "," << "Función Objetivo Batching" << "," << "Función Objetivo Batching Modificado" << "," << "Ratio Distancia Greedy" << "," << "Ratio Distancia Taxi Batching" << "," << "Ratio Distancia Batching Modificado" << std::endl;
+
+    //iteramos en cada size_n para sistematizar la obtención de resultados...
+    for(int i = 0 ; i < size_n.size() ; i++){
+
+        //completamos el path a cada archivo de instancia...
+        std:: string filename = "input/" + size_n[i] + ".csv";
+
+        TaxiAssignmentInstance instance(filename);
+        std::cout << filename << std::endl;
+
+        //Greedy Solver//
+        GreedySolver g_solver(instance);
+        g_solver.solve();
+
+        double g_objective_value = g_solver.getObjectiveValue();
+
+        double g_solution_time = g_solver.getSolutionTime();
+
+        //Batching Solver//
+        BatchingSolver b_solver(instance);
+        b_solver.solve();
+
+        double b_objective_value = b_solver.getObjectiveValue();
+
+        double b_solution_time = b_solver.getSolutionTime();
+
+
+        //Mejora relativa (%Gap) de Función Objetivo //
+        double gap_ov = (g_objective_value - b_objective_value) / b_objective_value;
+
+        //Mejora relativa (%Gap) de Tiempo de Resolución //
+        double gap_t = (g_solution_time - b_solution_time) / b_solution_time;
+
+        archivo << filename << "," << instance.n << "," << g_objective_value << "," << b_objective_value << "," << g_solution_time << "," << b_solution_time << "," << gap_ov << "," << gap_t << std::endl;
+
+
+
+
+
+
+
+
     }
+
+
 
     return 0;
     
