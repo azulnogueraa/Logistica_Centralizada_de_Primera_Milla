@@ -82,21 +82,24 @@ int main(int argc, char** argv) {
         GreedySolver g_solver(instance);
         g_solver.solve();
 
-        double g_dist_ratio = g_solver.getDistanceRatio();
+        double g_objective_value = g_solver.getObjectiveValue();
 
+     
         //Batching Solver//
         BatchingSolver b_solver(instance);
         b_solver.solve();
 
-        double b_dist_ratio = b_solver.getDistanceRatio();
+        double b_objective_value = b_solver.getObjectiveValue();
+
 
         //Batching Solver Modificado//
         BatchingSolverModificado bm_solver(instance);
         bm_solver.solve();
 
-        double bm_dist_ratio = bm_solver.getDistanceRatio();
+        double bm_objetive_value = bm_solver.getObjectiveValue();
 
-        archivo2 << filename << ","  << g_dist_ratio << "," << b_dist_ratio << "," << bm_dist_ratio << std::endl;
+
+        //archivo2 << filename << ","  << g_dist_ratio << "," << b_dist_ratio << "," << bm_dist_ratio << std::endl;
 
     }
 
