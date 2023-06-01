@@ -23,7 +23,7 @@ class BatchingSolver
         TaxiAssignmentSolution getSolution() const;
         int getSolutionStatus() const;
         double getSolutionTime() const;
-        
+        double getDistanceRatio() const;
         
 	
 	private:
@@ -37,6 +37,7 @@ class BatchingSolver
         double _objective_value;
         int _solution_status;
         double _solution_time;
+        double _distance_ratio;
 
 };
 

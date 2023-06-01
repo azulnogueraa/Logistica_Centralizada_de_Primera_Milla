@@ -1,5 +1,5 @@
-#ifndef TAXI_ASSIGNMENT_BATCHING_SOLVER_H
-#define TAXI_ASSIGNMENT_BATCHING_SOLVER_H
+#ifndef TAXI_BATCHING_MODIFICADO_H
+#define TAXI_BATCHING_MODIFICADO_H
 
 #include <cstdint>
 #include <vector>
@@ -24,9 +24,9 @@ class BatchingSolverModificado
         TaxiAssignmentSolution getSolution() const;
         int getSolutionStatus() const;
         double getSolutionTime() const;
+        double getDistanceRatio() const;
         
         
-	
 	private:
         // Completar con lo que sea necesario.
         operations_research::SimpleMinCostFlow _min_cost_flow;
@@ -38,6 +38,7 @@ class BatchingSolverModificado
         double _objective_value;
         int _solution_status;
         double _solution_time;
+        double _distance_ratio;
 
 };
 

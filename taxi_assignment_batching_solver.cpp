@@ -76,6 +76,22 @@ void BatchingSolver::solve() {
 
     //Bibliografia de chrono: https://openwebinars.net/blog/como-usar-la-libreria-chrono-en-c/
 
+    //Calculamos el distance ratio...
+    double dist_viaje = 0;
+    double dist_busqueda = 0;
+    
+    for( int t = 0; t < this->_instance.n; t++) {
+
+        int pax_assigned = this->_solution.getAssignedPax(t);
+
+        // if(this->_instance.pax_trip_dist)
+        dist_busqueda += this->_instance.dist[t][pax_assigned];
+        dist_viaje += this->_instance.pax_trip_dist[pax_assigned];    
+
+    }
+    
+    this->_distance_ratio = (dist_busqueda / dist_viaje);
+
 }
 
 // a continuación se crea el grafo modelado en el ejercicio 2
@@ -101,6 +117,7 @@ void BatchingSolver::_createMinCostFlowNetwork() {
             // Las capacidades son todas 1, definidas al inicializar.
             start_nodes[cnt] = i;
             end_nodes[cnt] = j;
+
             unit_costs[cnt] = 10 * this->_instance.dist[i][j - n];
             cnt++;
         }
@@ -144,4 +161,7 @@ double BatchingSolver::getSolutionTime() const {
     return this->_solution_time;
 }
 
+double BatchingSolver::getDistanceRatio() const {
+    return this->_distance_ratio;
+}
 

@@ -10,6 +10,7 @@ BatchingSolverModificado::BatchingSolverModificado(TaxiAssignmentInstance &insta
     this->_objective_value = 0;
     this->_solution_status = 0;
     this->_solution_time = 0;
+    this->_distance_ratio = 0;
 }
 
 void BatchingSolverModificado::setInstance(TaxiAssignmentInstance &instance) {
@@ -54,11 +55,12 @@ void BatchingSolverModificado::solve() {
             
 
             //Agregamos la arista t->p a la solución.
+
             this->_solution.assign(t,p);
 
             //El valor objetivo equivale a la suma de los costos de las aristas t->p.
             //dividimos por diez para que queden los números originales.
-            this->_objective_value += this->_min_cost_flow.UnitCost(i) / 10.0;
+            this->_objective_value += this->_min_cost_flow.UnitCost(i) / 100.0;
 
         }
 
@@ -75,6 +77,22 @@ void BatchingSolverModificado::solve() {
     this->_solution_time = duration.count();
 
     //Bibliografia de chrono: https://openwebinars.net/blog/como-usar-la-libreria-chrono-en-c/
+
+    //Calculamos el distance ratio...
+    double dist_viaje = 0;
+    double dist_busqueda = 0;
+    
+    for( int t = 0; t < this->_instance.n; t++) {
+
+        int pax_assigned = this->_solution.getAssignedPax(t);
+
+        
+        dist_busqueda += this->_instance.dist[t][pax_assigned];
+        dist_viaje += this->_instance.pax_trip_dist[pax_assigned];    
+
+    }
+    
+    this->_distance_ratio = (dist_busqueda / dist_viaje);
 
 }
 
@@ -102,7 +120,13 @@ void BatchingSolverModificado::_createMinCostFlowNetwork() {
             start_nodes[cnt] = i;
             end_nodes[cnt] = j;
             // Ratio de distancia recorrida por el taxi sobre la distancia total.
-            unit_costs[cnt] = (this->_instance.dist[i][j - n] / this->_instance.pax_trip_dist[j - n]) * 100; 
+
+            if(this->_instance.pax_trip_dist[j-n] != 0) {
+                unit_costs[cnt] = (this->_instance.dist[i][j - n] / this->_instance.pax_trip_dist[j - n]) ; 
+            }
+            else{
+                unit_costs[cnt] = numeric_limits<int>::max();
+            }
             cnt++;
         }
     }
@@ -143,6 +167,10 @@ int BatchingSolverModificado::getSolutionStatus() const {
 
 double BatchingSolverModificado::getSolutionTime() const {
     return this->_solution_time;
+}
+
+double BatchingSolverModificado::getDistanceRatio() const {
+    return this->_distance_ratio;
 }
 
 

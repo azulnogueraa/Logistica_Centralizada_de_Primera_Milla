@@ -69,6 +69,22 @@ void GreedySolver::solve() {
 
     //libreria de chrono: https://openwebinars.net/blog/como-usar-la-libreria-chrono-en-c/
 
+    //Calculamos el distance ratio...
+    double dist_viaje = 0;
+    double dist_busqueda = 0;
+    
+    for( int t = 0; t < this->_instance.n; t++) {
+
+        int pax_assigned = this->_solution.getAssignedPax(t);
+
+        // if(this->_instance.pax_trip_dist)
+        dist_busqueda += this->_instance.dist[t][pax_assigned];
+        dist_viaje += this->_instance.pax_trip_dist[pax_assigned];    
+
+    }
+    
+    this->_distance_ratio = (dist_busqueda / dist_viaje);
+
 }
 
 double GreedySolver::getObjectiveValue() const {
@@ -85,5 +101,9 @@ int GreedySolver::getSolutionStatus() const {
 
 double GreedySolver::getSolutionTime() const {
     return this->_solution_time;
+}
+
+double GreedySolver::getDistanceRatio() const {
+    return this->_distance_ratio;
 }
 
