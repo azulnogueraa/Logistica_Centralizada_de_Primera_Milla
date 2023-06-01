@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
     std::ofstream archivo2("resultados_nuevos.csv");
 
     // Escribamos los nombres de columna en el archivo
-    archivo2 << "Nombre" << "," << "Ratio Distancia Greedy" << "," << "Ratio Distancia Taxi Batching" << "," << "Ratio Distancia Batching Modificado" << std::endl;
+    archivo2 << "Nombre" << "," << "Función Objetivo Greedy" << "," << "Función Objetivo Taxi Batching" << "," << "Función Objetivo Batching Modificado" << "," << "Ratio Distancia Greedy" << "," << "Ratio Distancia Taxi Batching" << "," << "Ratio Distancia Batching Modificado" << std::endl;
 
     //iteramos en cada size_n para sistematizar la obtención de resultados...
     for(int i = 0 ; i < size_n.size() ; i++){
@@ -82,24 +82,109 @@ int main(int argc, char** argv) {
         GreedySolver g_solver(instance);
         g_solver.solve();
 
+        TaxiAssignmentSolution g_solution = g_solver.getSolution();
         double g_objective_value = g_solver.getObjectiveValue();
 
-     
+        // Ratio de distancia de Greedy:
+        double g_dist_ratio_total = 0;
+        int n_g = instance.n;
+        double g_dist_ratio;
+        for(int t = 0; t < instance.n; t++){
+            int p_assigned = g_solution.getAssignedPax(t); 
+            
+            /*
+            En los casos de que la distancia del viaje sea cero, decidimos filtrarlo y saturarlo en cero.
+            Por esa razón, disminuimos la n para no contar este caso en el promedio. 
+            */
+            if(instance.pax_trip_dist[p_assigned] == 0){
+                g_dist_ratio = 0;
+                n_g = n_g - 1;
+            }
+            else{
+                g_dist_ratio = ( instance.dist[t][p_assigned] / ( instance.pax_trip_dist[p_assigned])) * 100;            
+            }
+
+
+            //Suma de promedio total de ratios por instancia:
+            // Promedio de Ratios por instancia:
+            g_dist_ratio_total += g_dist_ratio;
+        }
+
+         double g_dist_ratio_promedio = g_dist_ratio_total / n_g;
+
+        
         //Batching Solver//
         BatchingSolver b_solver(instance);
         b_solver.solve();
 
+        TaxiAssignmentSolution b_solution = b_solver.getSolution();
         double b_objective_value = b_solver.getObjectiveValue();
+
+        // Ratio de distancia de Batching:
+        double b_dist_ratio_total = 0;
+        int n_b = instance.n;
+        double b_dist_ratio;
+        for(int t = 0; t < instance.n; t++){
+            int p_assigned = b_solution.getAssignedPax(t); 
+            
+            /*
+            En los casos de que la distancia del viaje sea cero, decidimos filtrarlo y saturarlo en cero.
+            Por esa razón, disminuimos la n para no contar este caso en el promedio. 
+            */
+            if(instance.pax_trip_dist[p_assigned] == 0){
+                b_dist_ratio = 0;
+                n_b = n_b - 1;
+            }
+            else{
+                b_dist_ratio = ( instance.dist[t][p_assigned] / ( instance.pax_trip_dist[p_assigned])) * 100;            
+            }
+
+
+            //Suma de promedio total de ratios por instancia:
+            // Promedio de Ratios por instancia:
+            b_dist_ratio_total += b_dist_ratio;
+        }
+
+         double b_dist_ratio_promedio = b_dist_ratio_total / n_b;
 
 
         //Batching Solver Modificado//
         BatchingSolverModificado bm_solver(instance);
         bm_solver.solve();
 
+        TaxiAssignmentSolution bm_solution = bm_solver.getSolution();
         double bm_objetive_value = bm_solver.getObjectiveValue();
 
+        // Ratio de distancia de Batching Modificado:
+        double bm_dist_ratio_total = 0;
+        int n_bm = instance.n;
+        double bm_dist_ratio;
+        for(int t = 0; t < instance.n; t++){
+            int p_assigned = bm_solution.getAssignedPax(t); 
+            
+            /*
+            En los casos de que la distancia del viaje sea cero, decidimos filtrarlo y saturarlo en cero.
+            Por esa razón, disminuimos la n para no contar este caso en el promedio. 
+            */
+            if(instance.pax_trip_dist[p_assigned] == 0){
+                bm_dist_ratio = 0;
+                n_bm = n_bm - 1;
+            }
+            else{
+                bm_dist_ratio = ( instance.dist[t][p_assigned] / ( instance.pax_trip_dist[p_assigned])) * 100;            
+            }
 
-        //archivo2 << filename << ","  << g_dist_ratio << "," << b_dist_ratio << "," << bm_dist_ratio << std::endl;
+            //Suma de promedio total de ratios por instancia:
+            // Promedio de Ratios por instancia:
+            bm_dist_ratio_total += bm_dist_ratio;
+        }
+
+         double bm_dist_ratio_promedio = bm_dist_ratio_total / n_bm;
+
+
+
+
+        archivo2 << filename << ","  << g_objective_value  << "," <<  b_objective_value  << ","  <<  bm_objetive_value << ","  << g_dist_ratio_promedio << "," << b_dist_ratio_promedio << "," << bm_dist_ratio_promedio << std::endl;
 
     }
 

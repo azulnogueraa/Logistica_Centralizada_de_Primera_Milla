@@ -59,7 +59,7 @@ void BatchingSolverModificado::solve() {
 
             //El valor objetivo equivale a la suma de los costos de las aristas t->p.
             //dividimos por diez para que queden los números originales.
-            this->_objective_value += this->_min_cost_flow.UnitCost(i) / 100.0;
+            this->_objective_value += this->_instance.dist[t][p];
 
         }
 
