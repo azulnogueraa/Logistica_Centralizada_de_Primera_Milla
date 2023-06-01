@@ -96,7 +96,6 @@ void BatchingSolverModificado::solve() {
 
 }
 
-// a continuación se crea el grafo modelado en el ejercicio 2
 void BatchingSolverModificado::_createMinCostFlowNetwork() {
 
     // Inicializamos las estructuras del grafo...
