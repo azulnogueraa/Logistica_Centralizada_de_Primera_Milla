@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     std::ofstream archivo("resultados.csv");
 
     // Escribamos los nombres de columna en el archivo
-    archivo << "Nombre" << "," << "Tamaño de Muestra" << "," << "Función Objetivo Greedy" << "," << "Función Objetivo Batching" << "," << "Tiempo Greedy" << "," << "Tiempo Batching" << "," << "%Gap (Función Objetivo)" << "," << "%Gap (Tiempo de Resolución)" << std::endl;
+    archivo << "Tamaño de Muestra" << "," << "Función Objetivo Greedy" << "," << "Función Objetivo Batching" << "," << "Tiempo Greedy" << "," << "Tiempo Batching" << "," << "%Gap (Función Objetivo)" << "," << "%Gap (Tiempo de Resolución)" << std::endl;
 
 
     //vector con cada instancia a leer...
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
         //Mejora relativa (%Gap) de Tiempo de Resolución //
         double gap_t = (g_solution_time - b_solution_time) / b_solution_time;
 
-        archivo << filename << "," << instance.n << "," << g_objective_value << "," << b_objective_value << "," << g_solution_time << "," << b_solution_time << "," << gap_ov << "," << gap_t << std::endl;
+        archivo << instance.n << "," << g_objective_value << "," << b_objective_value << "," << g_solution_time << "," << b_solution_time << "," << gap_ov << "," << gap_t << std::endl;
 
     }
 
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
     std::ofstream archivo2("resultados_nuevos.csv");
 
     // Escribamos los nombres de columna en el archivo
-    archivo2 << "Nombre" << "," << "Función Objetivo Greedy" << "," << "Función Objetivo Taxi Batching" << "," << "Función Objetivo Batching Modificado" << "," << "Ratio Distancia Greedy" << "," << "Ratio Distancia Taxi Batching" << "," << "Ratio Distancia Batching Modificado" << std::endl;
+    archivo2 << "Función Objetivo Greedy" << "," << "Función Objetivo Taxi Batching" << "," << "Función Objetivo Batching Modificado" << "," << "Ratio Distancia Greedy" << "," << "Ratio Distancia Taxi Batching" << "," << "Ratio Distancia Batching Modificado" << std::endl;
 
     //iteramos en cada size_n para sistematizar la obtención de resultados...
     for(int i = 0 ; i < size_n.size() ; i++){
@@ -184,7 +184,7 @@ int main(int argc, char** argv) {
 
 
 
-        archivo2 << filename << ","  << g_objective_value  << "," <<  b_objective_value  << ","  <<  bm_objetive_value << ","  << g_dist_ratio_promedio << "," << b_dist_ratio_promedio << "," << bm_dist_ratio_promedio << std::endl;
+        archivo2 << g_objective_value  << "," <<  b_objective_value  << ","  <<  bm_objetive_value << ","  << g_dist_ratio_promedio << "," << b_dist_ratio_promedio << "," << bm_dist_ratio_promedio << std::endl;
 
     }
 
