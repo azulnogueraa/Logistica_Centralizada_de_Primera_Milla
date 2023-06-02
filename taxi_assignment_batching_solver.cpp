@@ -56,11 +56,11 @@ void BatchingSolver::solve() {
             //Agregamos la arista t->p a la solución.
             this->_solution.assign(t,p);
 
-            //El valor objetivo equivale a la suma de los costos de las aristas t->p.
-            //dividimos por diez para que queden los números originales.
-            this->_objective_value += this->_min_cost_flow.UnitCost(i) / 10.0;
-
         }
+        
+        //El valor objetivo equivale a la suma de los costos de las aristas t->p.
+        //dividimos por diez para que queden los números originales.
+        this->_objective_value = this->_min_cost_flow.OptimalCost() / 10.0;
 
     } else {
         std::cout << "Solving the min cost flow problem failed. Solver status: "
